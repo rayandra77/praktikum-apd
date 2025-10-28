@@ -8,12 +8,12 @@ akun = {
 
 # Data ikan disimpan dalam dictionary
 data_ikan = {
-    1: {"nama": "Cupang", "harga": 5000, "stok": 20},
-    2: {"nama": "Koi", "harga": 15000, "stok": 10},
-    3: {"nama": "Guppy", "harga": 7000, "stok": 15},
-    4: {"nama": "Nemo", "harga": 10000, "stok": 10},
-    5: {"nama": "Glowfish", "harga": 5000, "stok": 20},
-    6: {"nama": "Arwana", "harga": 50000, "stok": 5}
+    "Cupang": {"harga": 5000, "stok": 20},
+    "Koi": {"harga": 15000, "stok": 10},
+    "Guppy": {"harga": 7000, "stok": 15},
+    "Nemo": {"harga": 10000, "stok": 10},
+    "Glowfish": {"harga": 5000, "stok": 20},
+    "Arwana": {"harga": 50000, "stok": 5}
 }
 
 while True:
@@ -53,8 +53,8 @@ while True:
                         print("=========== DAFTAR IKAN HIAS ==========")
                         print("|No   | Nama Ikan    | Harga    | Stok|")
                         print("---------------------------------------")
-                        for i, ikan in data_ikan.items():
-                            print(f"| {i:<3} | {ikan['nama']:<12} | {ikan['harga']:<8} | {ikan['stok']:<3} |")
+                        for i, (nama, info) in enumerate(data_ikan.items(), start=1):
+                            print(f"| {i:<3} | {nama:<12} | {info['harga']:<8} | {info['stok']:<3} |")
                         print("---------------------------------------")
                         input("\nTekan Enter untuk melanjutkan...")
 
@@ -64,9 +64,11 @@ while True:
                         nama = input("Nama ikan: ")
                         harga = int(input("Harga ikan: "))
                         stok = int(input("Stok ikan: "))
-                        next_id = max(data_ikan.keys()) + 1
-                        data_ikan[next_id] = {"nama": nama, "harga": harga, "stok": stok}
-                        print("Data ikan berhasil ditambahkan!")
+                        if nama in data_ikan:
+                            print("Ikan tersebut sudah ada!")
+                        else:
+                            data_ikan[nama] = {"harga": int(harga), "stok": int(stok)}
+                            print(f"Ikan {nama} berhasil ditambahkan!")
                         input("\nTekan Enter untuk melanjutkan...")
 
                     elif pilih == "3":
@@ -74,24 +76,30 @@ while True:
                         print("============ UBAH DATA IKAN ===========")
                         print("|No   | Nama Ikan    | Harga    | Stok|")
                         print("---------------------------------------")
-                        for i, ikan in data_ikan.items():
-                            print(f"| {i:<3} | {ikan['nama']:<12} | {ikan['harga']:<8} | {ikan['stok']:<3} |")
+                        for i, (nama, info) in enumerate(data_ikan.items(), start=1):
+                            print(f"| {i:<3} | {nama:<12} | {info['harga']:<8} | {info['stok']:<3} |")
 
                         print("---------------------------------------")
                         index = int(input("Nomor ikan yang ingin diubah: "))
-                        if index in data_ikan:
-                            nama = input("Nama baru (kosong = tidak diubah): ")
-                            harga = input("Harga baru (kosong = tidak diubah): ")
-                            stok = input("Stok baru (kosong = tidak diubah): ")
+                        if 1 <= index <= len(data_ikan):
+                            nama_lama = list(data_ikan.keys())[index - 1]
+                            data_lama = data_ikan[nama_lama]
 
-                            if nama != "":
-                                data_ikan[index]["nama"] = nama
-                            if harga != "":
-                                data_ikan[index]["harga"] = int(harga)
-                            if stok != "":
-                                data_ikan[index]["stok"] = int(stok)
+                            nama_baru = input("Nama baru (kosong = tidak diubah): ")
+                            harga_baru = input("Harga baru (kosong = tidak diubah): ")
+                            stok_baru = input("Stok baru (kosong = tidak diubah): ")
 
-                            print("Data ikan berhasil diperbarui!")
+                            if nama_baru != "":
+                                data_ikan[nama_baru] = data_lama
+                                if nama_baru != nama_lama:
+                                    del data_ikan[nama_lama]
+                                nama_lama = nama_baru
+                            if harga_baru != "":
+                                data_ikan[nama_lama]["harga"] = int(harga_baru)
+                            if stok_baru != "":
+                                data_ikan[nama_lama]["stok"] = int(stok_baru)
+
+                            print(f"Data ikan {nama_lama} berhasil diperbarui!")
                         else:
                             print("Nomor ikan tidak valid!")
                         input("\nTekan Enter untuk melanjutkan...")
@@ -101,14 +109,15 @@ while True:
                         print("=========== HAPUS DATA IKAN ===========")
                         print("|No   | Nama Ikan    | Harga    | Stok|")
                         print("---------------------------------------")
-                        for i, ikan in data_ikan.items():
-                            print(f"| {i:<3} | {ikan['nama']:<12} | {ikan['harga']:<8} | {ikan['stok']:<3} |")
+                        for i, (nama, info) in enumerate(data_ikan.items(), start=1):
+                            print(f"| {i:<3} | {nama:<12} | {info['harga']:<8} | {info['stok']:<3} |")
 
                         print("---------------------------------------")
                         index = int(input("Nomor ikan yang ingin dihapus: "))
-                        if index in data_ikan:
-                            del data_ikan[index]
-                            print("Data ikan berhasil dihapus!")
+                        if 1 <= index <= len(data_ikan):
+                            nama = list(data_ikan.keys())[index - 1]
+                            del data_ikan[nama]
+                            print(f"Ikan {nama} berhasil dihapus!")
                         else:
                             print("Nomor ikan tidak valid!")
                         input("\nTekan Enter untuk melanjutkan...")
@@ -133,8 +142,8 @@ while True:
                         print("=========== DAFTAR IKAN HIAS ==========")
                         print("|No   | Nama Ikan    | Harga    | Stok|")
                         print("---------------------------------------")
-                        for i, ikan in data_ikan.items():
-                            print(f"| {i:<3} | {ikan['nama']:<12} | {ikan['harga']:<8} | {ikan['stok']:<3} |")
+                        for i, (nama, info) in enumerate(data_ikan.items(), start=1):
+                            print(f"| {i:<3} | {nama:<12} | {info['harga']:<8} | {info['stok']:<3} |")
                         print("---------------------------------------")
                         input("\nTekan Enter untuk melanjutkan...")
 
